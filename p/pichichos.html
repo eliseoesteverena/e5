@@ -661,13 +661,22 @@ text-align:center;
 
 /* Ocultar botón en el PDF */
 @media print {
+  html {font-size:17px;}
   .btn-pdf { display: none; }
   .precio-item {
   /*  flex-direction: column;*/
   padding: 1.5rem 1.2rem;
   }
+  .precio-item-label {
+    
 }
-
+.precio-item-value {
+  
+}
+.precio-item-sub {
+  
+}
+}
 @media print, (max-width: 640px) {
   .precio-item {
   /*  flex-direction: column;*/
