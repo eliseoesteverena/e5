@@ -694,6 +694,122 @@ page-break-before: always ;
     height: 1px;
   }
 }
+/* Antes y Después */
+.ad-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 640px) {
+  .ad-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+.ad-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.ad-col-header {
+  padding: 0.6rem 1rem;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 0;
+}
+.ad-col-antes .ad-col-header {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
+}
+.ad-col-despues .ad-col-header {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.ad-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background-color: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-top: none;
+  gap: 0;
+}
+.ad-node {
+  width: 100%;
+  max-width: 220px;
+  padding: 0.65rem 1rem;
+  text-align: center;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-gray-700);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  line-height: 1.4;
+}
+.ad-col-despues .ad-node {
+  border-color: var(--color-gray-200);
+}
+.ad-node-highlight {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  font-weight: 600;
+}
+.ad-node-end-mal {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
+  border-color: var(--color-gray-300);
+}
+.ad-node-end-bien {
+  background-color: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+  font-weight: 600;
+}
+.ad-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.75rem;
+  color: var(--color-gray-500);
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ad-branch {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 380px;
+  margin: 0.25rem 0;
+}
+.ad-branch-node {
+  padding: 0.5rem 0.35rem;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  line-height: 1.3;
+}
+.ad-branch-arrow {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 380px;
+}
+.ad-branch-arrow span {
+  flex: 1;
+  text-align: center;
+  color: var(--color-gray-500);
+  font-size: 0.8rem;
+}
 
   </style>
 </head>
@@ -705,7 +821,7 @@ page-break-before: always ;
   <div class="hero-inner">
       <div class="hero-content">
         <p class="hero-eyebrow">Propuesta · Experiencia digital</p>
-        <h1>Pichichos al Rescate<br>puede llegar más lejos.</h1>
+        <h1>Pichichos al Rescate<br>puede portenciar su impacto.</h1>
         <p class="hero-sub">Una propuesta para conectar mejor la misión de la organización con las personas, empresas e instituciones que podrían sumarse.</p>
         <div class="hero-autor">
           <!--img src="../perfil.jpg" alt="Eliseo" class="hero-autor-foto"-->
@@ -725,12 +841,12 @@ page-break-before: always ;
     <div class="container max-w-2xl mx-auto">
       <div class="accent-bar"></div>
       <h2 class="text-primary mb-3">El desafío que tienen muchas organizaciones</h2>
-      <p class="text-gray-500 mb-4">El impacto existe. El trabajo existe. Pero cuando alguien llega por primera vez a los canales digitales, suele pasar esto:</p>
+      <p class="text-gray-500 mb-4">El impacto existe. El trabajo existe. Pero cuando alguien llega por primera vez a los canales digitales, el recorrido suele terminar así:</p>
 
       <ul class="problem-list">
         <li>Ve historias de rescates y adopciones.</li>
         <li>Lee la filosofía y misión de la organización.</li>
-        <li>No encuentra rápidamente qué hacer después.</li>
+        <li>No encuentra un siguiente paso claro.</li>
         <li>Se va sin haberse involucrado.</li>
       </ul>
 
@@ -756,7 +872,7 @@ page-break-before: always ;
   <div class="container max-w-2xl mx-auto">
     <div class="accent-bar"></div>
     <h2 class="text-primary mb-2">Mi propuesta ¿Qué incluye?</h2>
-    <p class="text-gray-500 mb-0">Dependiendo de los objetivos y prioridades de la organización, la propuesta podría contemplar:</p>
+    <p class="text-gray-500 mb-0">Dependiendo de los objetivos y prioridades de la organización, la propuesta puede incluir:</p>
     <ul class="incluye-list">
       <li>Recorridos específicos para distintos públicos.</li>
       <li>Espacios dedicados a voluntariado, donaciones, educación y alianzas institucionales.</li>
@@ -769,6 +885,59 @@ page-break-before: always ;
     </div>
   </div>
 </section>
+
+<!-- ANTES Y DESPUÉS -->
+<section class="section">
+  <div class="container max-w-2xl mx-auto">
+    <div class="accent-bar"></div>
+    <h2 class="text-primary mb-6">Antes y después</h2>
+
+    <div class="ad-grid">
+
+      <!-- ANTES -->
+      <div class="ad-col ad-col-antes">
+        <div class="ad-col-header">Antes</div>
+        <div class="ad-flow">
+          <div class="ad-node">Visitante</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node">Conoce la organización<br>Redes / Web</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node">No encuentra un<br>siguiente paso claro</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node ad-node-end-mal">Abandona o posterga<br>la decisión</div>
+        </div>
+      </div>
+
+      <!-- DESPUÉS -->
+      <div class="ad-col ad-col-despues">
+        <div class="ad-col-header">Después</div>
+        <div class="ad-flow">
+          <div class="ad-node">Visitante</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node">Conoce la organización<br>Redes / Web</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node ad-node-highlight">Entiende el propósito<br>y elige su rol</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-branch-arrow">
+            <span>↓</span><span>↓</span><span>↓</span><span>↓</span>
+          </div>
+          <div class="ad-branch">
+            <div class="ad-branch-node">Donar</div>
+            <div class="ad-branch-node">Voluntariado</div>
+            <div class="ad-branch-node">Charlas y educación</div>
+            <div class="ad-branch-node">Alianzas institucionales</div>
+          </div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node">Realiza una acción</div>
+          <div class="ad-arrow">↓</div>
+          <div class="ad-node ad-node-end-bien">Seguimiento y vínculo</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
   <!-- RESULTADO -->
   <section class="section section-alt">
@@ -796,9 +965,9 @@ page-break-before: always ;
         </div>
       </div>
 
-      <p class="mt-5 text-primary">La idea no es reemplazar lo que ya funciona.</p>
+      <p class="mt-5 text-primary">La intención no es reemplazar lo que ya funciona.</p>
       <p class="mt-5 text-primary">
-        <strong>La idea es ayudar a que lo que ya funciona acompañe mejor los próximos objetivos.</strong>
+        <strong>La intención es ayudar a que lo que ya funciona acompañe mejor el crecimiento de la organización.</strong>
       </p>
     </div>
   </section>
@@ -886,10 +1055,10 @@ page-break-before: always ;
       
       <div class="sobre-mi-body">
         <p><strong>Hola, soy Eliseo.</strong></p>
-        <p>Trabajo ayudando a organizaciones y proyectos a mejorar la forma en que presentan su trabajo, conectan con sus públicos y transforman interés en participación.</p>
+        <p>Ayudo a organizaciones a convertir interés en participación mediante experiencias digitales mejor pensadas.</p>
         <p>Llegué a <strong>Pichichos al Rescate</strong> a través de una presentación sobre el trabajo que vienen realizando en La Cava y me llamó la atención la amplitud de iniciativas que impulsan: rescate, educación, castraciones, voluntariado y trabajo comunitario.</p>
         <p>Al recorrer sus distintos materiales encontré una organización con mucho impacto, una comunidad comprometida y una misión muy clara.</p>
-        <p>Esta propuesta nace de una pregunta sencilla:</p>
+        <p>Esta propuesta parte de una pregunta concreta:</p>
         <p class="sobre-mi-pregunta">¿Cómo puede la comunicación ayudar a que más personas descubran ese trabajo y encuentren una forma concreta de sumarse?</p>
         <p>Mi enfoque combina análisis, diseño de experiencias digitales y desarrollo web, siempre priorizando la claridad, la simplicidad y los objetivos reales de cada organización.</p>
         <div class="sobre-mi-contacto">
@@ -986,7 +1155,7 @@ page-break-before: always ;
 <section class="cta-section my-6 p-xl">
   <div class="container max-w-l mx-auto">
     <h2>¿Tiene sentido conversar?</h2>
-    <p>Esta propuesta es el inicio de una conversación, no una solución cerrada. Me interesa entender si los objetivos de <strong>Pichichos al Rescate</strong> y este enfoque tienen puntos en común.</p>
+    <p>Esta propuesta es el inicio de una conversación, no una solución cerrada. Si este enfoque tiene sentido para Pichichos, el siguiente paso es conversar objetivos, prioridades y alcance.</p>
     <div class="cta-botones">
       <a href="https://wa.me/54XXXXXXXXXX" target="_blank" rel="noopener" class="btn-cta-wa">
         <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
