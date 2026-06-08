@@ -684,9 +684,18 @@ page-break-before: always ;
   margin-top: 1rem;
 }
 }
+
+
+@media print, (max-width: 900px) {
+  .precio-item {
+  flex-direction: column;
+  padding: 1.5rem 1.2rem;
+  }
+}
+
 @media print, (max-width: 640px) {
   .precio-item {
-  /*  flex-direction: column;*/
+  /*flex-direction: column;*/
   padding: 1.5rem 1.2rem;
   }
   .precio-divider {
@@ -1250,9 +1259,9 @@ page-break-before: always ;
     </div>
   </section-->
 
-  <footer>
+  <!--footer>
     <p>Propuesta para Pichichos al Rescate</p>
-  </footer>
+  </footer-->
 
   <!--script>
     function handleSubmit(e) {
