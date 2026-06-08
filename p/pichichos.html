@@ -1358,6 +1358,8 @@ async function exportarPDF() {
   const svgs = [...document.querySelectorAll('svg')];
   const replacements = [];
   
+  btn.remove();
+  
   for (const svg of svgs) {
     try {
       const img = await svgToImg(svg);
