@@ -1290,48 +1290,101 @@ page-break-before: always ;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-  function exportarPDF() {
-    const btn = document.querySelector('.btn-pdf');
-    btn.classList.add('btn-pdf--loading');
-    btn.disabled = true;
-
-    const opt = {
-      margin:      0,
-      filename:    'propuesta-pichichos.pdf',
-      image:       { type: 'jpeg', quality: 1 },
-      html2canvas: {
-        scale:           3,
-        useCORS:         true,
-        allowTaint:      false,
-        letterRendering: true,
-        dpi:             600,
-        scrollX:         0,
-        scrollY:         -window.scrollY,
-        windowWidth:     document.documentElement.scrollWidth,
-        windowHeight:    document.documentElement.scrollHeight,
-      },
-      jsPDF: {
-        unit:        'mm',
-        format:      'a4',
-        orientation: 'portrait',
-        compress:    false,
-        hotfixes:    ['px_scaling']
-      },
-      pagebreak: {
-        mode:   ['avoid-all', 'css', 'legacy'],
-        before: '.section',
-      }
-    };
-
-    html2pdf()
-      .set(opt)
-      .from(document.body)
-      .save()
-      .then(() => {
-        btn.classList.remove('btn-pdf--loading');
-        btn.disabled = false;
-      });
+  async function svgToImg(svgEl) {
+  const serializer = new XMLSerializer();
+  let svgStr = serializer.serializeToString(svgEl);
+  
+  // Asegurar namespace y dimensiones
+  if (!svgStr.includes('xmlns')) {
+    svgStr = svgStr.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
   }
+  const width = svgEl.getBoundingClientRect().width || 24;
+  const height = svgEl.getBoundingClientRect().height || 24;
+  if (!svgEl.getAttribute('width')) svgStr = svgStr.replace('<svg', `<svg width="${width}"`);
+  if (!svgEl.getAttribute('height')) svgStr = svgStr.replace('<svg', `<svg height="${height}"`);
+  
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const canvas = document.createElement('canvas');
+    img.onload = () => {
+      canvas.width = width * 3; // escala x3 para calidad
+      canvas.height = height * 3;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(3, 3);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      
+      const replacement = document.createElement('img');
+      replacement.src = canvas.toDataURL('image/png');
+      replacement.style.cssText = svgEl.style.cssText;
+      replacement.width = width;
+      replacement.height = height;
+      resolve(replacement);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+async function exportarPDF() {
+  const btn = document.querySelector('.btn-pdf');
+  btn.classList.add('btn-pdf--loading');
+  btn.disabled = true;
+  
+  // ── Reemplazar todos los SVG por imágenes PNG ──
+  const svgs = [...document.querySelectorAll('svg')];
+  const replacements = [];
+  
+  for (const svg of svgs) {
+    try {
+      const img = await svgToImg(svg);
+      svg.parentNode.replaceChild(img, svg);
+      replacements.push({ img, svg }); // guardar para restaurar
+    } catch (e) {
+      console.warn('SVG no convertido:', e);
+    }
+  }
+  
+  const opt = {
+    margin: 0,
+    filename: 'propuesta-pichichos.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+      scale: 3,
+      useCORS: true,
+      allowTaint: false,
+      letterRendering: true,
+      dpi: 600,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight,
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait',
+      compress: false,
+    },
+    pagebreak: {
+      mode: ['avoid-all', 'css', 'legacy'],
+      before: '.section',
+    }
+  };
+  
+  await html2pdf().set(opt).from(document.body).save();
+  
+  // ── Restaurar SVGs originales ──
+  for (const { img, svg } of replacements) {
+    img.parentNode.replaceChild(svg, img);
+  }
+  
+  btn.classList.remove('btn-pdf--loading');
+  btn.disabled = false;
+}
 </script>
 </body>
 </html>
