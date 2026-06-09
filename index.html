@@ -3,10 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio</title>
-  <link rel="stylesheet" href="m.min.css">
+  <title>estudio5 · iteración</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0a1a3b;
+      --white: #ffffff;
+      --dur: 5s;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── Outer breathing rings ── */
+    .ring-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: min(60vw, 420px);
+      height: min(60vw, 420px);
+    }
+
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.55);
+      animation: breatheRing var(--dur) ease-in-out infinite;
+    }
+    .ring:nth-child(2) {
+      inset: -18%;
+      border-color: rgba(255,255,255,0.3);
+      animation-delay: 0.4s;
+    }
+    .ring:nth-child(3) {
+      inset: -36%;
+      border-color: rgba(255,255,255,0.15);
+      animation-delay: 0.8s;
+    }
+
+    @keyframes breatheRing {
+      0%, 100% { transform: scale(1);    opacity: 1; }
+      50%       { transform: scale(1.06); opacity: 0.6; }
+    }
+
+    /* ── Center content ── */
+    .center {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Main mark ── */
+    .mark {
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+      display: flex;
+      align-items: baseline;
+    }
+
+    .brace {
+      font-weight: 300;
+      display: inline-block;
+      animation: breatheBrace var(--dur) ease-in-out infinite;
+    }
+    .brace-close { animation-delay: 0.15s; }
+
+    @keyframes breatheBrace {
+      0%, 100% { transform: scaleY(1);    opacity: 1; }
+      50%       { transform: scaleY(1.08); opacity: 0.75; }
+    }
+
+    .word {
+      font-weight: 300;
+      display: inline-block;
+      overflow: hidden;
+      max-width: 0;
+      opacity: 0;
+      animation: expandWord var(--dur) ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes expandWord {
+      0%   { max-width: 0;   opacity: 0;   letter-spacing: -0.08em; }
+      18%  { max-width: 0;   opacity: 0; }
+      42%  { max-width: 5em; opacity: 1;   letter-spacing: -0.01em; }
+      60%  { max-width: 5em; opacity: 1;   letter-spacing: -0.01em; }
+      82%  { max-width: 0;   opacity: 0;   letter-spacing: -0.08em; }
+      100% { max-width: 0;   opacity: 0; }
+    }
+
+    .num {
+      font-weight: 700;
+      animation: pulseNum var(--dur) ease-in-out infinite;
+    }
+
+    @keyframes pulseNum {
+      0%, 100% { opacity: 1;    transform: scale(1); }
+      42%      { opacity: 0.85; transform: scale(0.97); }
+      60%      { opacity: 0.85; transform: scale(0.97); }
+    }
+
+    /* ── Progress arc (SVG) ── */
+    .arc-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      animation: rotateSlow calc(var(--dur) * 3) linear infinite;
+    }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .arc-wrap circle {
+      fill: none;
+      stroke: rgba(255,255,255,0.35);
+      stroke-width: 0.5;
+      stroke-dasharray: 6 18;
+      stroke-linecap: round;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      position: fixed;
+      bottom: 1.8rem;
+      width: 100%;
+      text-align: center;
+      font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .footer a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 400;
+      border-bottom: 1px solid rgba(255,255,255,0.35);
+      padding-bottom: 0.1em;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .footer a:hover {
+      border-color: var(--white);
+    }
+
+  </style>
 </head>
 <body>
+
+  <div class="ring-wrap">
+
+    <!-- Dashed orbit -->
+    <svg class="arc-wrap" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46"/>
+    </svg>
+
+    <!-- Breathing rings -->
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+
+    <!-- Content -->
+    <div class="center">
+      <div class="mark">
+        <span class="brace">{</span>
+        <span class="word">estudio</span>
+        <span class="num">5</span>
+        <span class="brace brace-close">}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <a href="mailto:eliseoesteverena@gmail.com">Contacto</a>
+  </footer>
 
 </body>
 </html>
