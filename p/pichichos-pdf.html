@@ -1,0 +1,1773 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta · Pichichos al Rescate</title>
+  <link rel="stylesheet" href="../m.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Base ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #fff;
+      color: var(--color-gray-900);
+      margin: 0;
+    }
+
+    /* ── Pages ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 14mm 16mm;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #fff;
+      page-break-after: always;
+    }
+
+    .page:last-child {
+      page-break-after: avoid;
+    }
+
+    /* ── Print ── */
+    @media print {
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        margin: 0;
+        padding: 14mm 16mm;
+        page-break-after: always;
+        box-shadow: none;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    @media screen {
+      body {
+        background: #e8eef5;
+        padding: 2rem 0;
+      }
+
+      .page {
+        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.10);
+        margin-bottom: 2rem;
+      }
+    }
+
+    /* ── Shared elements ── */
+    .accent-bar {
+      width: 2.5rem;
+      height: 3px;
+      background: var(--color-accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .label-sm {
+      font-size: var(--font-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-gray-500);
+    }
+
+    .page-num {
+      position: absolute;
+      bottom: 10mm;
+      right: 16mm;
+      font-size: var(--font-xs);
+      color: var(--color-gray-500);
+    }
+
+    .page-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--color-gray-200);
+      margin: 0 0 1.5rem;
+    }
+
+    /* ══════════════════════════════ PÁGINA 1 — PORTADA ══════════════════════════════ */
+    .portada {
+      background: var(--color-primary);
+      justify-content: space-between;
+    }
+
+    .portada-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .portada-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 100%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .portada-tag {
+      font-size: var(--font-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent-light);
+    }
+
+    .portada-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 0 2rem;
+    }
+
+    .portada-accent-bar {
+      width: 2.5rem;
+      height: 3px;
+      background: var(--color-accent);
+      margin-bottom: 1.75rem;
+    }
+
+    .portada-h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 1.25rem;
+      max-width: 480px;
+    }
+
+    .portada-sub {
+      font-size: var(--font-sm);
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.65;
+      max-width: 400px;
+    }
+
+    .portada-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .portada-autor {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .portada-autor-foto {
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      object-fit: cover;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .portada-autor-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .portada-autor-nombre {
+      font-size: var(--font-sm);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .portada-autor-fecha {
+      font-size: var(--font-xs);
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .portada-page-num {
+      font-size: var(--font-xs);
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ══════════════════════════════ PÁGINA 2 — OBSERVACIÓN ══════════════════════════════ */
+    .obs-intro {
+      font-size: var(--font-base);
+      color: var(--color-gray-700);
+      line-height: 1.75;
+      margin-bottom: 0;
+    }
+
+    .obs-intro p {
+      margin-bottom: 0.6rem;
+    }
+
+    .obs-intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .obs-intro strong {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .obs-oportunidad {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--color-accent);
+      background: var(--color-gray-50);
+      font-size: var(--font-sm);
+      color: var(--color-gray-700);
+      line-height: 1.65;
+    }
+
+    /* Antes/Después inline */
+    .ad-wrap {
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .ad-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .ad-col-hdr {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .ad-col-antes .ad-col-hdr {
+      background: var(--color-gray-200);
+      color: var(--color-gray-700);
+    }
+
+    .ad-col-despues .ad-col-hdr {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .ad-flow {
+      border: 1px solid var(--color-gray-200);
+      border-top: none;
+      background: var(--color-gray-50);
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .ad-node {
+      width: 100%;
+      max-width: 180px;
+      padding: 0.45rem 0.65rem;
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--color-gray-700);
+      background: #fff;
+      border: 1px solid var(--color-gray-200);
+      line-height: 1.35;
+    }
+
+    .ad-arr {
+      font-size: 0.7rem;
+      color: var(--color-gray-500);
+      line-height: 1.6;
+    }
+
+    .ad-node-bad {
+      background: var(--color-gray-200);
+      border-color: var(--color-gray-300);
+      color: var(--color-gray-700);
+      font-weight: 600;
+      font-size: 0.65rem;
+    }
+
+    .ad-node-hl {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .ad-node-good {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+      font-weight: 600;
+      font-size: 0.65rem;
+    }
+
+    .ad-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      justify-content: center;
+      max-width: 180px;
+      margin: 0.25rem 0;
+    }
+
+    .ad-tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      border: 1px solid var(--color-gray-200);
+      background: #fff;
+      padding: 0.15rem 0.4rem;
+    }
+
+    /* ══════════════════════════════ PÁGINA 3 — OPORTUNIDAD ══════════════════════════════ */
+    .opp-body {
+      font-size: var(--font-sm);
+      color: var(--color-gray-700);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .opp-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0;
+    }
+
+    .opp-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--color-gray-200);
+      font-size: var(--font-sm);
+      color: var(--color-gray-700);
+      line-height: 1.5;
+    }
+
+    .opp-list li::before {
+      content: "·";
+      color: var(--color-accent);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.1;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════ PÁGINA 4 — CTA ══════════════════════════════ */
+    .cta-page {
+      background: var(--color-primary);
+      justify-content: space-between;
+    }
+
+    .cta-top {}
+
+    .cta-tag {
+      font-size: var(--font-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent-light);
+      margin-bottom: 1rem;
+    }
+
+    .cta-h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .cta-sub {
+      font-size: var(--font-sm);
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-items {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .cta-items li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: var(--font-sm);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .cta-items li::before {
+      content: "·";
+      color: var(--color-accent);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* CTA central — botón grande + QR */
+    .cta-central {
+      display: flex;
+      align-items: stretch;
+      gap: 1.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.5rem;
+      border-radius:5px;
+    }
+
+    .cta-btn-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .cta-btn-big {
+      display: block;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: var(--font-lg);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 0;
+    }
+
+    .cta-url {
+      font-size: var(--font-xs);
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      word-break: break-all;
+    }
+
+    .cta-qr-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .cta-qr {
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cta-qr svg {
+      width: 68px;
+      height: 68px;
+    }
+
+    .cta-qr-label {
+      font-size: 0.6rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    /* Firma CTA */
+    .cta-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+
+    .cta-firma {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cta-firma-foto {
+      width: 36px;
+      height: 36px;
+      border-radius: 100%;
+      object-fit: cover;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .cta-firma-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .cta-firma-nombre {
+      font-size: var(--font-sm);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .cta-firma-cargo {
+      font-size: var(--font-xs);
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* ── Botón PDF flotante ── */
+    .btn-pdf {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--font-sm);
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-pdf:hover {
+      background: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-pdf svg {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page portada">
+    <div class="portada-top">
+      <span class="portada-tag">Propuesta · Experiencia digital</span>
+      <img src="./pichichos-logo.jpg" alt="Logo Pichichos" class="portada-logo">
+    </div>
+
+    <div class="portada-center">
+      <div class="portada-accent-bar"></div>
+      <h1 class="portada-h1">Potenciar la misión de Pichichos al Rescate a través de una experiencia orientada a la participación</h1>
+      <p class="portada-sub">Propuesta personalizada elaborada a partir del análisis de sus canales actuales.</p>
+    </div>
+
+    <div class="portada-bottom">
+      <div class="portada-autor">
+        <img src="../perfil.webp" alt="Eliseo" class="portada-autor-foto">
+        <div class="portada-autor-info">
+          <span class="portada-autor-nombre">Eliseo</span>
+          <span class="portada-autor-fecha">Junio 2025</span>
+        </div>
+      </div>
+      <span class="portada-page-num">1 / 4</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="accent-bar"></div>
+    <span class="label-sm" style="margin-bottom:0.75rem;display:block;">02 — Observación</span>
+    <div class="page-rule"></div>
+
+    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--color-primary);margin-bottom:1.25rem;line-height:1.3;">El impacto ya existe</h2>
+
+    <div class="obs-intro">
+      <p>Pichichos no existe para tener una página web ni una cuenta de Instagram.</p>
+      <p>Existe para generar impacto.</p>
+      <p><strong>El trabajo ya existe.<br>La comunidad ya existe.<br>Los proyectos ya existen.</strong></p>
+      <p>La oportunidad está en que más personas puedan descubrir ese trabajo, comprenderlo y encontrar una forma concreta de sumarse.</p>
+    </div>
+
+    <div class="obs-oportunidad">
+      La oportunidad no está en construir más, sino en conectar mejor lo que ya existe con quienes quieren participar.
+    </div>
+
+    <div class="ad-wrap">
+      <div class="ad-col ad-col-antes">
+        <div class="ad-col-hdr">Hoy</div>
+        <div class="ad-flow">
+          <div class="ad-node">Visitante</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node">Conoce la organización</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node">No encuentra un paso siguiente</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node ad-node-bad">Abandona o posterga</div>
+        </div>
+      </div>
+
+      <div class="ad-col ad-col-despues">
+        <div class="ad-col-hdr">Con la propuesta</div>
+        <div class="ad-flow">
+          <div class="ad-node">Visitante</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node">Conoce y entiende el propósito</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node ad-node-hl">Elige su forma de sumarse</div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-tags">
+            <span class="ad-tag">Donar</span>
+            <span class="ad-tag">Voluntariado</span>
+            <span class="ad-tag">Educación</span>
+            <span class="ad-tag">Alianzas</span>
+          </div>
+          <div class="ad-arr">↓</div>
+          <div class="ad-node ad-node-good">Vínculo y seguimiento</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="page-num">2 / 4</span>
+  </div>
+
+  <div class="page">
+    <div class="accent-bar"></div>
+    <span class="label-sm" style="margin-bottom:0.75rem;display:block;">03 — Qué oportunidad veo</span>
+    <div class="page-rule"></div>
+
+    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--color-primary);margin-bottom:1.25rem;line-height:1.3;">Una organización con mucho por mostrar</h2>
+
+    <p class="opp-body">Al recorrer los distintos materiales encontré una organización con una comunidad activa y una misión muy clara.</p>
+    <p class="opp-body">Sin embargo, gran parte del valor generado se encuentra distribuido entre distintos espacios y no siempre resulta evidente para quienes llegan por primera vez.</p>
+    <p class="opp-body" style="margin-bottom:0;">Esto representa una oportunidad para facilitar nuevas formas de participación:</p>
+
+    <ul class="opp-list">
+      <li>Voluntariado</li>
+      <li>Donaciones</li>
+      <li>Educación</li>
+      <li>Alianzas institucionales</li>
+      <li>Empresas colaboradoras</li>
+    </ul>
+
+    <div style="margin-top:2rem;padding:1.25rem 1.5rem;border-left:3px solid var(--color-accent);background:var(--color-gray-50);">
+      <p style="font-size:var(--font-sm);color:var(--color-primary);font-weight:600;line-height:1.6;margin:0;">
+        El desafío no está en construir algo nuevo desde cero,<br> sino en hacer visible y accesible lo que ya existe.
+      </p>
+    </div>
+
+    <span class="page-num">3 / 4</span>
+  </div>
+
+  <div class="page cta-page">
+    <div class="cta-top">
+      <p class="cta-tag">04 — Propuesta completa</p>
+      <h2 class="cta-h2">Preparé una propuesta interactiva</h2>
+      <p class="cta-sub">Donde desarrollo en detalle cada punto de este documento:</p>
+
+      <ul class="cta-items">
+        <li>Observaciones</li>
+        <li>Oportunidades detectadas</li>
+        <li>Enfoque de trabajo</li>
+        <li>Alcance inicial</li>
+        <li>Inversión estimada</li>
+        <li>Preguntas frecuentes</li>
+      </ul>
+    </div>
+
+    <div class="cta-central">
+      <div class="cta-btn-wrap">
+        <a href="https://estudio5.com.ar/p/pichichos" class="cta-btn-big">Ver propuesta completa →</a>
+        <p class="cta-url">estudio5.com.ar/p/pichichos</p>
+      </div>
+
+      <div class="cta-qr-wrap">
+        <div class="cta-qr">
+          <?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="792" height="792" viewBox="0 0 792 792">
+  <rect width="792" height="792" fill="#ffffff" x="0" y="0" />
+  <g fill="#000000">
+    <g transform="translate(264,48) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,48) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,48) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,48) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,48) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,72) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,96) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,120) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,120) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,120) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,120) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,120) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,144) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,168) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,192) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,216) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,216) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,216) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,216) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,240) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,264) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,288) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,312) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(168,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,336) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,360) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,384) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,408) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(168,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,432) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(72,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(168,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,456) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(144,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,480) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,504) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(96,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(120,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(192,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(216,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,528) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,552) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,576) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(360,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,600) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,624) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(432,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(552,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(720,648) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(264,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(336,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(480,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(504,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(576,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,672) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(384,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(408,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(528,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(648,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(696,696) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(240,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(288,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(312,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(456,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(600,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(624,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(672,720) scale(4.12)">
+      <rect width="6" height="6" />
+    </g>
+    <g transform="translate(48,48)">
+      <g transform="scale(12)">
+        <path d="M0,0v14h14V0H0z M12,12H2V2h10V12z" />
+      </g>
+    </g>
+    <g transform="translate(576,48)">
+      <g transform="scale(12)">
+        <path d="M0,0v14h14V0H0z M12,12H2V2h10V12z" />
+      </g>
+    </g>
+    <g transform="translate(48,576)">
+      <g transform="scale(12)">
+        <path d="M0,0v14h14V0H0z M12,12H2V2h10V12z" />
+      </g>
+    </g>
+    <g transform="translate(96,96)">
+      <g transform="scale(12)">
+        <rect width="6" height="6" />
+      </g>
+    </g>
+    <g transform="translate(624,96)">
+      <g transform="scale(12)">
+        <rect width="6" height="6" />
+      </g>
+    </g>
+    <g transform="translate(96,624)">
+      <g transform="scale(12)">
+        <rect width="6" height="6" />
+      </g>
+    </g>
+  </g>
+</svg>
+        </div>
+        <span class="cta-qr-label">Escanear</span>
+      </div>
+    </div>
+
+    <div class="cta-bottom">
+      <div class="cta-firma">
+        <img src="../perfil.webp" alt="Eliseo" class="cta-firma-foto">
+        <div class="cta-firma-info">
+          <span class="cta-firma-nombre">Eliseo</span>
+          <span class="cta-firma-cargo">Diseño y experiencia digital</span>
+        </div>
+      </div>
+      <span style="font-size:var(--font-xs);color:rgba(255,255,255,0.25);">4 / 4</span>
+    </div>
+  </div>
+
+  <button class="btn-pdf no-print" onclick="window.print()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9V2h12v7" />
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+      <rect x="6" y="14" width="12" height="8" />
+    </svg>
+    Exportar PDF
+  </button>
+
+</body>
+
+</html>
