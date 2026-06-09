@@ -655,6 +655,7 @@ page-break-before: always ;
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+/*  display: none !important;*/
 }
 .btn-pdf--loading svg {
   animation: spin 1s linear infinite;
@@ -822,7 +823,7 @@ page-break-before: always ;
   </style>
 </head>
 <body>
-
+<div id="contenido-pdf">
   <!-- HERO -->
   <header class="hero">
     <div class="container max-w-2xl mx-auto">
@@ -1277,6 +1278,7 @@ page-break-before: always ;
       btn.style.backgroundColor = 'var(--color-accent)';
     }
   </script-->
+  </div>
 <!-- BOTÓN PDF -->
 <button class="btn-pdf" onclick="exportarPDF()" title="Descargar como PDF">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1347,6 +1349,7 @@ async function svgToImg(svgEl) {
 }
 
 async function exportarPDF() {
+  window.scrollTo(0, 0);
   const btn = document.querySelector('.btn-pdf');
   btn.classList.add('btn-pdf--loading');
   btn.disabled = true;
@@ -1355,7 +1358,7 @@ async function exportarPDF() {
   const svgs = [...document.querySelectorAll('svg')];
   const replacements = [];
   
-  btn.remove();
+  // btn.style.display = 'none';
   
   for (const svg of svgs) {
     try {
@@ -1394,7 +1397,8 @@ async function exportarPDF() {
     }
   };
   
-  await html2pdf().set(opt).from(document.body).save();
+  // await html2pdf().set(opt).from(document.body).save();
+  await html2pdf().set(opt).from(document.getElementById('contenido-pdf')).save();
   
   // ── Restaurar SVGs originales ──
   for (const { img, svg } of replacements) {
