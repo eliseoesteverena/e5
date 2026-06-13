@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ============ m.min.css (base) ============ */
 :root{
@@ -52,8 +54,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--color-gray-900);background-col
 .preview-scroll{flex:1;overflow:auto;background:var(--color-gray-200);padding:1.5rem;display:flex;flex-direction:column;align-items:center}
 
 /* Hoja A4 */
-.page-sheet{background:var(--color-white);width:210mm;min-height:297mm;box-shadow:0 2px 10px rgba(0,0,0,.15);padding:10mm;margin-bottom:1.5rem}
-.content-page{page-break-before:always}
+.page-sheet{position:relative;background:var(--color-white);width:210mm;min-height:297mm;box-shadow:0 2px 10px rgba(0,0,0,.15);padding:10mm;margin-bottom:1.5rem}
+.page-sheet + .page-sheet{page-break-before:always;break-before:page}
+.sheet-header,.sheet-footer{position:absolute;left:0;right:0;height:10mm;display:flex;justify-content:center;align-items:center;padding:0 2mm;font-size:0.7rem;color:#9aa0a8;font-family:'DM Sans',sans-serif;text-align:center}
+.sheet-header{top:3mm}
+.sheet-footer{bottom:3mm}
 
 /* Carátula */
 .cover{display:flex;flex-direction:column;justify-content:space-between;height:277mm}
@@ -93,9 +98,6 @@ body{font-family:'DM Sans',sans-serif;color:var(--color-gray-900);background-col
 .content hr{border:none;height:1px;background:var(--color-gray-200);margin:1.25rem 0}
 .content table,.content tr,.content thead,.content img,.content pre,.content blockquote{page-break-inside:avoid}
 
-/* Saltos de página 
-.content h1,.content h2{page-break-before:always}*/
-.content > h1:first-child,.content > h2:first-child{page-break-before:avoid}
 
 /* ============ Modal de configuración ============ */
 .modal-overlay{position:fixed;inset:0;background:rgba(8,7,31,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:1rem}
@@ -119,9 +121,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--color-gray-900);background-col
 /* Loading PDF */
 .btn[disabled]{opacity:.6;cursor:not-allowed}
 
-/* Mobile */
+/* Modo exportación directa (html2canvas): que cada hoja capture limpia, sin sombra/gap */
+.exporting-pdf .page-sheet{box-shadow:none;margin-bottom:0}
 @media (max-width:880px){
-html{font-size:15px;}
   .main{grid-template-columns:1fr}
   .editor-pane{border-right:none;border-bottom:1px solid var(--color-gray-200)}
   .editor-pane,.preview-pane{height:50vh}
@@ -129,25 +131,16 @@ html{font-size:15px;}
   .cover{height:auto;min-height:140mm}
 }
 
-/* ============ Encabezado / pie fijos (solo impresión) ============ */
-.print-header,.print-footer{display:none}
-
 /* ============ Impresión ============ */
-@page{size:A4;margin:10mm}
+@page{size:A4;margin:0}
 @media print{
+  html,body{height:auto}
+  .app{height:auto;display:block}
   .topbar,.editor-pane,.pane-label,.modal-overlay{display:none!important}
   .main{display:block}
   .preview-pane{height:auto}
   .preview-scroll{overflow:visible;padding:0;background:none;display:block}
-  .page-sheet{box-shadow:none;margin:0;width:auto;min-height:auto;padding:0}
-  .cover{height:auto;min-height:calc(100vh - 0mm)}
-  .print-header,.print-footer{
-    display:block;position: fixed;left:0;right:0;height:10mm;
-    font-size:8px;color:#9aa0a8;font-family:'DM Sans',sans-serif;
-    display:flex;align-items:center;padding:0 2mm;
-  }
-  .print-header{top:8mm}
-  .print-footer{bottom:8mm}
+  .page-sheet{box-shadow:none;margin:0;width:auto;min-height:297mm;padding:10mm}
 }
 
 </style>
@@ -159,12 +152,10 @@ html{font-size:15px;}
     <h1>Markdown → PDF</h1>
     <div class="actions">
       <button class="btn" id="btn-config">⚙ Configuración</button>
-      <button class="btn btn-accent" id="btn-export">🖨 Guardar PDF</button>
+      <button class="btn" id="btn-export">🖨 Imprimir</button>
+      <button class="btn btn-accent" id="btn-export-pdf">⬇ Descargar PDF</button>
     </div>
   </header>
-
-  <div class="print-header" id="print-header"></div>
-  <div class="print-footer" id="print-footer"></div>
 
   <div class="main">
     <div class="editor-pane">
@@ -180,228 +171,7 @@ Escribí o pegá tu contenido en markdown acá...
 
 | Columna A | Columna B |
 |---|---|
-| valor | valor |">
-## 1\. Introducción y Propósito
-
-### 1.1 Objetivo del Manual
-
-Este documento nace con el propósito de centralizar y definir los criterios esenciales que guían la creación, edición y publicación de contenidos de A♥MATE. Su objetivo principal es proveer al equipo de una herramienta de referencia rápida que garantice la coherencia visual y narrativa en cada pieza de comunicación, optimizando los tiempos de redacción y unificando el mensaje de la marca.
-
-### 1.2 ¿A quién está dirigido?
-
-Este manual es de uso obligatorio y está diseñado para:
-
-* Creadores de contenido y redactores: Como guía diaria para la producción de textos.  
-* Revisores: Como marco de referencia para la aprobación de materiales.  
-* Colaboradores externos (Freelancers/Agencias): Para asegurar la alineación con la identidad del proyecto desde el primer día.
-
-### 1.3 ¿Por qué importa? (El valor de la estandarización)
-
-La consistencia en la comunicación no es solo una cuestión estética, sino un activo estratégico. Estandarizar nuestros contenidos nos permite:
-
-* Construir identidad: Un tono de voz predecible y sólido genera confianza y reconocimiento inmediato en la audiencia.  
-* Eficiencia operativa: Al eliminar la ambigüedad sobre "cómo escribir", se reducen las correcciones iterativas y se aceleran los procesos de aprobación.  
-* Escalabilidad: Facilita el crecimiento del equipo y la delegación de tareas sin perder la esencia original del proyecto. 
-
-## 2\. Pilares de la Marca / Proyecto
-
-### 2.1 Manifiesto Estratégico
-
-Como eje central y brújula de todas nuestras comunicaciones, definimos nuestra declaración de identidad en la siguiente premisa:
-
-A♥MATE es una marca que rescata prácticas culturales auténticas para ayudar a las personas a reconectar con lo que importa en la vida moderna.
-
->*Si esa idea se consolida, entonces el mate deja de ser simplemente el producto principal y se convierte en la primera expresión de una filosofía mucho más grande. Y esa es justamente la clase de significado que puede sostener una marca durante años sin depender de tendencias.* 
-
-### 2.2 Los 8 Pilares Fundamentales
-
-Cada pieza de contenido, campaña o texto redactado bajo el sello de la marca debe alinearse con uno o más de los siguientes principios rectores:
-
-#### 1\. Volver a las prácticas reales
-
-En un entorno cada vez más digital, acelerado y fragmentado, A♥MATE reivindica las experiencias físicas, tangibles y conscientes.
-
-* Premisa clave: El mate no es una bebida rápida; es una práctica.
-
-#### 2\. El mate como un acto de presencia
-
-No entendemos el mate únicamente como una fuente de hidratación o energía. Su verdadera función es servir como un ancla en el presente.
-
-* Premisa clave: Se toma mate para detenerse, para volver al momento y para generar una pausa intencional dentro de la rutina cotidiana.
-
-#### 3\. Conexión entre tradición y actualidad
-
-No buscamos conservar el mate como una reliquia cultural estática, sino demostrar que una tradición sudamericana ancestral tiene pleno sentido y vigencia en la vida europea contemporánea.
-
-* Premisa clave: La tradición no es un museo; es algo vivo.
-
-#### 4\. Cultura del cuidado
-
-El amor propio y el bienestar no aparecen en nuestro discurso como un concepto aspiracional o inalcanzable, sino como una acción cotidiana. Preparar un mate es el vehículo para activar este cuidado, el cual se divide en cuatro dimensiones:
-
-* Cuidado de uno mismo: Pausa, introspección y salud.  
-* Cuidado de los demás: Compartir, vincularse y empatizar.  
-* Cuidado de la tierra: Consciencia sobre lo que consumimos.  
-* Cuidado de los ritmos naturales: Respeto por el tiempo orgánico frente a la prisa.
-
-#### 5\. El origen como fuente de significado
-
-Para A♥MATE, el origen no es una narrativa de marketing ni una etiqueta comercial; es una parte esencial de nuestra identidad.
-
-* Premisa clave: La procedencia, la historia, los productores locales y la cultura que rodea al mate tienen exactamente el mismo valor que el producto en sí mismo.
-
-#### 6\. Selección con intención
-
-Nuestra propuesta comercial está estrictamente ligada a nuestra filosofía. No competimos por volumen ni por precio, y rechazamos la masividad impersonal.
-
-* Criterios de selección: Cada producto debe reflejar *naturalidad, autenticidad, respeto por la tierra y calidad*. Bajo este estándar es que cobran sentido y prioridad las yerbas orgánicas y biodinámicas.
-
-#### 7\. Acompañar, no empujar
-
-Nuestra postura ante la audiencia es de guía y compañía, nunca de imposición.
-
-* Tono de interacción: La marca no convence de manera agresiva, no grita, no persigue tendencias pasajeras y no fuerza la venta. Nuestro rol es acompañar con respeto a quienes sienten curiosidad por transformar su relación con el tiempo, la energía y sus propios hábitos.
-
-#### 8\. Volver a lo que importa (Nuestra Síntesis)
-
-Este pilar es la raíz de la cual derivan todos los demás. Es el recordatorio de aquello que la velocidad cotidiana suele hacernos olvidar.
-
-## **3\. Tono, Voz y Personalidad (Identidad Verbal y Visual)**
-
-### **3.1 Arquetipos de Marca**
-
-La personalidad de A♥MATE se construye a partir de la combinación de dos fuerzas complementarias:
-
-* **Arquetipo Primario: El Cuidador.** Centrado en la protección, el bienestar, la calidez humana y el fomento de rituales de amor propio.  
-* **Arquetipo Secundario: El Explorador.** Orientado a la búsqueda de autenticidad, el descubrimiento del origen, las raíces y la reconexión con lo natural.
-
-### **3.2 Fórmula de Voz**
-
-Nuestra voz suena como una amiga que descubrió algo que cambió su mañana y necesita contártelo con genuina emoción.
-
-### **3.3 La Regla de Oro: Profunda pero Concreta (Tangibilidad)**
-
-Para evitar caer en discursos aspiracionales vacíos o clichés místicos, la comunicación de A♥MATE debe regirse siempre por una norma estricta: **No hablamos de conceptos abstractos; hablamos de experiencias reales, humanas y tangibles.**
-
-* **Por qué importa:** Mantenerse en lo concreto hace que el mensaje sea creíble, cercano y genuino.  
-* **Cómo se aplica:** Buscamos que el lector se identifique con una acción física o un pensamiento cotidiano real, no con una promesa espiritual difusa.
-
-| ❌ Evitar (Abstracto / Difuso) | ✅ Preferir (Concreto / Tangible) |
-| :---- | :---- |
-| *"Conecta con tu esencia."* | *"Quizás el primer mate del día sea el único momento en que no estás haciendo dos cosas al mismo tiempo."* |
-| *"Alcanzá tu bienestar interior."* | *"Preparar un mate puede ser uno de los pocos momentos del día donde tus manos están ocupadas solo en una cosa."* |
-
-  ### **3.4 Matriz de Tono: Qué SÍ y qué NO somos**
-
-El tono regula cómo adaptamos nuestra voz en cada interacción. Se define bajo la siguiente guía de estilo:
-
-| SÍ es A♥MATE | NO es A♥MATE |
-| :---- | :---- |
-| **Cálido y cercano:** Como un abrazo suave o una charla íntima. | **Frío o corporativo:** Distante, plano o institucional. |
-| **Poético sin ser pretencioso:** Profundo pero simple y accesible. | **Exagerado, artificial o con *hype*:** Ruidoso. |
-| **Curioso y profundo:** Aporta significado y valor real. | **Superficial o *trending*:** Subirse a modas vacías. |
-| **Agradecido y humilde:** Valora las raíces y los procesos. | **Arrogante o premium-frío:** Elitista o inalcanzable. |
-| **Invita, no impone:** Sugiere pausas y espacios de reflexión. | **Venta agresiva:** Mensajes basados en la urgencia comercial. |
-
-### **3.5 Vocabulario Controlado**
-
-* **Palabras de uso frecuente (SÍ):** *ritual, raíces, presencia, origen, cuerpo, tierra, consciencia, pausa, cuidado, volver, despertar, natural, auténtico.*  
-* **Palabras prohibidas o a evitar (NO):** "súper oferta", "compra ya", "el mejor", "revolucionario", "trending", superlativos comerciales o lenguaje de urgencia.
-
-  ### **3.6 Ejemplos Prácticos de Copy (Voz en Acción)**
-
-🌿 **Ejemplo 1: El Origen como Respeto** "Cada hoja tiene una historia antes de llegar a tu mate. Creció en una tierra determinada, bajo un clima determinado y gracias al trabajo de personas que conocen este cultivo desde hace generaciones. Cuando hablamos de origen, no hablamos de marketing. Hablas de respeto."
-
-⏳ **Ejemplo 2: La Práctica y el Tiempo** "Mucho antes de convertirse en una bebida, el mate ya era una forma de encuentro. Una práctica compartida. Una pausa. Una tradición que atravesó siglos y fronteras. Hoy sigue invitándonos a lo mismo."
-
-🎯 **Ejemplo 3: El Propósito** "A♥MATE no nació para vender una bebida. Nació para compartir una forma distinta de relacionarse con el tiempo, la naturaleza y los pequeños rituales cotidianos."
-
-🗺️ **Ejemplo 4: Tradición Viva** "No buscamos traer una tradición para observarla desde lejos. Queremos acercarla para que forme parte de nuevas historias."
-
-### **3.7 Universo e Identidad Visual**
-
-Para que la personalidad sea cohesiva, la comunicación visual debe reflejar exactamente la misma serenidad y arraigo que el texto.
-
-#### **Paleta de Colores Orgánica**
-
-* **Color Primario:** Verde musgo / verde tierra (Transmite origen, naturaleza y confianza).  
-* **Color Secundario:** Tonos tierra, ocre, arena y marrones cálidos (Evocan raíces y autenticidad).  
-* **Color de Acento:** Blanco roto / crema (Aporta limpieza, aire y una sensación de premium accesible).
-
-*Evitar:* Blancos fríos puros, azules tecnológicos o colores altamente saturados/artificiales.
-
-#### **Dirección de Arte y Fotografía**
-
-* **Iluminación:** Uso exclusivo de luz natural, priorizando las tonalidades doradas del amanecer o atardecer.  
-* **Enfoque Sensorial:** Captura de texturas táctiles y ricas (madera, cerámica, lino, hojas, el vapor del agua).  
-* **Factor Humano:** Presencia recurrente de manos sosteniendo el mate para humanizar y aportar cercanía.  
-* **Composición:** Imágenes cinematográficas pero auténticas. Planos detalle (*close-ups*) muy cuidados combinados con escenas de estilo de vida en rincones minimalistas o paisajes serenos.
-
-## **4\. Estrategia de Canales, Distribución y Control**
-
-Para asegurar que los pilares conceptuales se traduzcan de manera efectiva en la comunicación diaria, la ejecución de contenidos en nuestros canales se rige por la siguiente matriz de distribución, palabras clave y control de calidad.
-
-### **4.1 Pilares de Contenido Operativos**
-
-Categorizamos nuestras publicaciones bajo cinco ejes estratégicos:
-
-| Pilar | Descripción |
-| :---- | :---- |
-| **Origen y Raíces** | La historia del mate, la tierra, la cultura sudamericana. Transparencia sobre el origen. |
-| **El Ritual** | Cómo preparar, vivir y sentir el mate como práctica de amor propio. |
-| **Bienestar Consciente** | Energía natural, beneficios reales, alternativas al café. Balance emocional y funcional. |
-| **Identidad y Filosofía** | Quiénes somos, por qué existimos, qué creemos. |
-| **Comunidad** | Preguntas, UGC (contenido generado por el usuario), conversación. Los clientes como parte de la historia. |
-
-### **4.2 Mix de Contenidos Recomendado (Distribución del Feed)**
-
-Para mantener un diario visual cohesionado, orgánico y estético, la planificación y distribución de las publicaciones en redes sociales seguirá estrictamente este equilibrio porcentual:
-
-* **40% \- Producto en contexto / *Lifestyle*:** Escenas cotidianas reales donde el producto se integra con naturalidad.  
-* **30% \- Personas en su momento de ritual:** Contenido generado por usuarios (UGC) o modelos interactuando de forma pausada y humana con el mate.  
-* **20% \- Contenido educativo o texto integrado sobre imagen:** Divulgación científica, datos culturales o frases conceptuales limpias.  
-* **10% \- Paisajes, campos y narrativa de origen:** Tomas amplias de la naturaleza, el cultivo y el trasfondo geográfico de la marca.
-
-### **4.3 Biblioteca de Keywords Estratégicas**
-
-#### **A. Keywords Obligatorias de Marca**
-
-Estas palabras clave deben integrarse de forma natural y fluida en la redacción de copies de cualquier canal, garantizando consistencia conceptual sin forzar la lectura:
-
-* *wellness* · *natural* · *orgánico* · *raíces* · *conectar con lo natural* · *origen argentino / sudamericano* · *consumo europeo* · *tradición* · *amor propio* · *cuidado natural*
-
-#### **B. Keywords SEO Prioritarias (Optimización de Búsqueda)**
-
-Términos técnicos e intenciones de búsqueda del usuario que deben incluirse de manera recurrente en artículos de blog, títulos, subtítulos o textos alternativos para mejorar el posicionamiento orgánico:
-
-* alternativa natural al café  
-* yerba mate orgánica  
-* beneficios del mate  
-* rituales de bienestar matutinos  
-* mate vs café diferencias  
-* por qué el café me da ansiedad
-
-### **4.4 Checklist de Coherencia de Marca (Filtro de Calidad)**
-
-Antes de presionar "Publicar" en cualquier pieza de contenido, es obligatorio que el material pase el siguiente control. Si el texto o la imagen no cumple con alguno de estos puntos, debe regresar a revisión:
-
-### **Filtro de Control de Calidad**
-
-* \[ \] **¿El tono es cálido y cercano, evitando lo corporativo o frío?**
-
-* \[ \] **¿Se incorporó al menos una keyword de marca de forma orgánica y natural?**  
-* \[ \] **¿La imagen utiliza luz natural y se alinea con la paleta de colores orgánica de la marca?**
-
-* \[ \] **¿El copy invita a la pausa y la reflexión en lugar de vender directamente?**
-
-* \[ \] **¿Se hace mención explícita al origen o a la autenticidad del producto?**  
-* \[ \] **¿El contenido es plenamente coherente con al menos uno de los 5 pilares operativos?**   
-* \[ \] **¿Refleja con claridad alguno de nuestros tres valores esenciales:** ***Natural, Agradecido o Amoroso*****?**
-
-* \[ \] **¿Se eliminaron por completo las palabras prohibidas?** (Ej: *"oferta"*, *"compra ya"*, *"revolucionario"*, *"trending"* o términos de urgencia comercial).
-
-
-</textarea>
+| valor | valor |"></textarea>
     </div>
     <div class="preview-pane">
       <div class="pane-label">Vista previa (A4)</div>
@@ -421,10 +191,8 @@ Antes de presionar "Publicar" en cualquier pieza de contenido, es obligatorio qu
               <span id="cover-fecha"></span>
             </div>
           </div>
-          <!-- Contenido -->
-          <div class="page-sheet content-page">
-            <div class="content" id="content-render"></div>
-          </div>
+          <!-- Contenido (paginado dinámicamente por JS) -->
+          <div id="content-pages"></div>
         </div>
       </div>
     </div>
@@ -438,15 +206,9 @@ Antes de presionar "Publicar" en cualquier pieza de contenido, es obligatorio qu
     <p class="sub">Estos datos se guardan en este navegador y se completan automáticamente la próxima vez.</p>
 
     <div class="section-title">Carátula</div>
-    <div class="field"><label>Título</label><input type="text" id="cfg-titulo" placeholder="Título del documento" value="Manual de Contenidos A♥MATE"></div>
-    <div class="field"><label>Subtítulo / descripción</label><textarea id="cfg-subtitulo" rows="2" placeholder="Subtítulo o descripción breve">
-Identidad Verbal, Comunicación y Guía de Estilo.
-"Rescatar prácticas culturales auténticas para ayudar a las
-personas a reconectar con lo que importa en la vida
-contemporánea."
-- Filosofía A♥MATE
-    </textarea></div>
-    <div class="field"><label>Eyebrow (texto pequeño superior, ej: PROPUESTA)</label><input type="text" id="cfg-eyebrow" placeholder="PROPUESTA" value="Versión Inicial"></div>
+    <div class="field"><label>Título</label><input type="text" id="cfg-titulo" placeholder="Título del documento"></div>
+    <div class="field"><label>Subtítulo / descripción</label><textarea id="cfg-subtitulo" rows="2" placeholder="Subtítulo o descripción breve"></textarea></div>
+    <div class="field"><label>Eyebrow (texto pequeño superior, ej: PROPUESTA)</label><input type="text" id="cfg-eyebrow" placeholder="PROPUESTA"></div>
     <div class="field-row">
       <div class="field"><label>Cliente / destinatario</label><input type="text" id="cfg-cliente" placeholder="Nombre del cliente"></div>
       <div class="field"><label>Fecha</label><input type="text" id="cfg-fecha" placeholder="Junio 2026"></div>
@@ -471,15 +233,13 @@ const STORAGE_KEY = 'md2pdf_config_v1';
 
 const els = {
   mdInput: document.getElementById('md-input'),
-  contentRender: document.getElementById('content-render'),
+  contentPages: document.getElementById('content-pages'),
   coverTitle: document.getElementById('cover-title'),
   coverSubtitle: document.getElementById('cover-subtitle'),
   coverEyebrow: document.getElementById('cover-eyebrow'),
   coverCliente: document.getElementById('cover-cliente'),
   coverFecha: document.getElementById('cover-fecha'),
   coverLogo: document.getElementById('cover-logo'),
-  printHeader: document.getElementById('print-header'),
-  printFooter: document.getElementById('print-footer'),
   modalOverlay: document.getElementById('modal-overlay'),
 };
 
@@ -510,7 +270,10 @@ function getConfigFromForm(){
   return cfg;
 }
 
+let currentConfig = {};
+
 function applyConfig(cfg){
+  currentConfig = cfg;
   els.coverTitle.textContent = cfg.titulo || 'Título del documento';
   els.coverSubtitle.textContent = cfg.subtitulo || '';
   els.coverEyebrow.textContent = cfg.eyebrow || '';
@@ -523,9 +286,8 @@ function applyConfig(cfg){
   } else {
     els.coverLogo.style.display = 'none';
   }
-  els.printHeader.textContent = cfg.header || '';
-  els.printFooter.textContent = cfg.footer || '';
   document.title = (cfg.filename && cfg.filename.trim()) || (cfg.titulo && cfg.titulo.trim()) || 'documento';
+  renderMarkdown();
 }
 
 function saveConfig(){
@@ -534,14 +296,75 @@ function saveConfig(){
   applyConfig(cfg);
 }
 
-// --- Render markdown ---
+// --- Render + paginar markdown ---
+// Alto útil de contenido por hoja.
+// En teoría sería 297mm - 2*10mm de padding = 277mm, pero la métrica del
+// motor de impresión no coincide 1:1 con getBoundingClientRect: hay
+// pequeñas diferencias de redondeo en márgenes/line-height de cada
+// elemento (p, li, etc.) que se acumulan a lo largo de la página. Se usa
+// un valor empírico más conservador para que la paginación coincida con
+// el resultado real impreso.
+const PAGE_CONTENT_HEIGHT_PX = 235 * 96 / 25.4;
+
 function renderMarkdown(){
   const md = els.mdInput.value;
-  els.contentRender.innerHTML = marked.parse(md);
-  // Marcar saltos de página: todos los h1/h2 excepto el primero
-  const headings = els.contentRender.querySelectorAll('h1, h2');
-  headings.forEach((h, i)=>{
-    h.style.pageBreakBefore = (i === 0) ? 'avoid' : 'always';
+
+  // Contenedor de medición oculto, mismo ancho que el área de contenido (210mm - 2*10mm padding)
+  const measure = document.createElement('div');
+  measure.className = 'content';
+  measure.style.position = 'absolute';
+  measure.style.visibility = 'hidden';
+  measure.style.left = '-9999px';
+  measure.style.top = '0';
+  measure.style.width = '190mm';
+  measure.innerHTML = marked.parse(md);
+  document.body.appendChild(measure);
+
+  const nodes = Array.from(measure.children);
+  const pages = [[]];
+  let currentHeight = 0;
+
+  nodes.forEach((node, idx) => {
+    const h = node.getBoundingClientRect().height;
+    const overflow = (currentHeight + h) > PAGE_CONTENT_HEIGHT_PX;
+    const currentPage = pages[pages.length - 1];
+
+    if (overflow && currentPage.length > 0) {
+      pages.push([]);
+      currentHeight = 0;
+    }
+    pages[pages.length - 1].push(node);
+    currentHeight += h;
+  });
+
+  document.body.removeChild(measure);
+
+  // Reconstruir #content-pages con una hoja A4 por página
+  els.contentPages.innerHTML = '';
+  pages.forEach(pageNodes => {
+    const sheet = document.createElement('div');
+    sheet.className = 'page-sheet content-page';
+
+    if(currentConfig.header){
+      const header = document.createElement('div');
+      header.className = 'sheet-header';
+      header.textContent = currentConfig.header;
+      sheet.appendChild(header);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'content';
+    pageNodes.forEach(n => content.appendChild(n));
+    sheet.appendChild(content);
+
+    if(currentConfig.footer){
+      const footer = document.createElement('div');
+      footer.className = 'sheet-footer';
+      footer.textContent = currentConfig.footer;
+      sheet.appendChild(footer);
+    }
+
+    els.contentPages.appendChild(sheet);
   });
 }
 
@@ -567,9 +390,44 @@ document.getElementById('btn-export').addEventListener('click', ()=>{
   window.print();
 });
 
+// --- Descarga directa de PDF (fiel a la vista previa) ---
+document.getElementById('btn-export-pdf').addEventListener('click', async ()=>{
+  const btn = document.getElementById('btn-export-pdf');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  document.body.classList.add('exporting-pdf');
+
+  try{
+    const { jsPDF } = window.jspdf;
+    const sheets = document.querySelectorAll('#contenido-pdf .page-sheet');
+    let pdf;
+
+    for(let i = 0; i < sheets.length; i++){
+      const canvas = await html2canvas(sheets[i], { scale: 3, useCORS: true });
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+      if(!pdf){
+        pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      } else {
+        pdf.addPage();
+      }
+      pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+    }
+
+    const base = (currentConfig.filename && currentConfig.filename.trim())
+      || (currentConfig.titulo && currentConfig.titulo.trim())
+      || 'documento';
+    pdf.save(base.replace(/\.pdf$/i, '') + '.pdf');
+  } finally {
+    document.body.classList.remove('exporting-pdf');
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+});
+
 // Init
 loadConfig();
-renderMarkdown();
 </script>
 </body>
 </html>
