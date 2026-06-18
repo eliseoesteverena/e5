@@ -338,7 +338,7 @@ function saveConfig(){
 // elemento (p, li, etc.) que se acumulan a lo largo de la página. Se usa
 // un valor empírico más conservador para que la paginación coincida con
 // el resultado real impreso.
-const PAGE_CONTENT_HEIGHT_PX = 240 * 96 / 25.4;
+const PAGE_CONTENT_HEIGHT_PX = 235 * 96 / 25.4;
 
 function renderMarkdown(){
   const md = els.mdInput.value;
@@ -358,17 +358,58 @@ function renderMarkdown(){
   const pages = [[]];
   let currentHeight = 0;
 
-  nodes.forEach((node, idx) => {
-    const h = node.getBoundingClientRect().height;
-    const overflow = (currentHeight + h) > PAGE_CONTENT_HEIGHT_PX;
+  function addNode(node, h){
     const currentPage = pages[pages.length - 1];
-
-    if (overflow && currentPage.length > 0) {
+    const overflow = (currentHeight + h) > PAGE_CONTENT_HEIGHT_PX;
+    if(overflow && currentPage.length > 0){
       pages.push([]);
       currentHeight = 0;
     }
     pages[pages.length - 1].push(node);
     currentHeight += h;
+  }
+
+  nodes.forEach(node => {
+    const tag = node.tagName;
+    const h = node.getBoundingClientRect().height;
+
+    // Si una lista no cabe entera, intentar distribuir ítem a ítem
+    if((tag === 'UL' || tag === 'OL') && (currentHeight + h) > PAGE_CONTENT_HEIGHT_PX){
+      const items = Array.from(node.children); // los <li>
+      let currentList = null;
+
+      items.forEach(li => {
+        const liH = li.getBoundingClientRect().height;
+
+        // Crear una lista nueva si no hay una abierta en la página actual
+        if(!currentList){
+          currentList = document.createElement(tag);
+          currentList.className = node.className;
+        }
+
+        // Ver si este li cabe en la página actual
+        if((currentHeight + liH) > PAGE_CONTENT_HEIGHT_PX && pages[pages.length-1].length > 0){
+          // Cerrar la lista actual, abrir nueva página
+          if(currentList.children.length > 0){
+            pages[pages.length - 1].push(currentList);
+          }
+          pages.push([]);
+          currentHeight = 0;
+          currentList = document.createElement(tag);
+          currentList.className = node.className;
+        }
+
+        currentList.appendChild(li.cloneNode(true));
+        currentHeight += liH;
+      });
+
+      // Agregar la última lista al grupo actual
+      if(currentList && currentList.children.length > 0){
+        pages[pages.length - 1].push(currentList);
+      }
+    } else {
+      addNode(node, h);
+    }
   });
 
   document.body.removeChild(measure);
